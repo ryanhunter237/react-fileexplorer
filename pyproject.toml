@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fileexplorer"
+version = "0.0.1"
+authors = [
+    { name="Ryan Hunter", email="ryanhunter237@gmail.com" },
+]
+description = "A file explorer Flask app"
+readme = "README.md"
+dependencies = [
+    "flask",
+    "python-dotenv",
+]
