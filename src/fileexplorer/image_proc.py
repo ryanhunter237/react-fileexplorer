@@ -7,8 +7,7 @@ from fileexplorer.proc import ProcessorTemplate
 IMAGE_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.gif', '.bmp',)
 
 class ImageProcessor(ProcessorTemplate):
-    def __init__(self):
-        self.extensions = IMAGE_EXTENSIONS
+    extensions = IMAGE_EXTENSIONS
 
     def make_thumbnail(
         self,

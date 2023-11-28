@@ -6,8 +6,7 @@ from pathlib import Path
 from PIL import Image
 
 class ProcessorTemplate(ABC):
-    def __init__(self):
-        self.extensions = ()
+    extensions = ()
 
     def can_process_file(self, file_path: Path) -> bool:
         return file_path.suffix.lower() in self.extensions

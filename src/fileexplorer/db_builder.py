@@ -7,7 +7,6 @@ from fileexplorer import models
 from fileexplorer.models import (
     create_tables,
     insert_thumbnail,
-    thumbnail_exists_for_file,
     insert_data_file,
 )
 from fileexplorer.image_proc import ImageProcessor
