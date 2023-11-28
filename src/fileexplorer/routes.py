@@ -41,7 +41,12 @@ def get_directory_listing(relpath: str):
                 _external=True
             )
             directories.append(child_data)
-    return jsonify({'relpath': relpath, 'files': files, 'directories': directories})
+    return jsonify({
+        'relpath': relpath,
+        'files': files,
+        'directories': directories,
+        'parts': url_for('api.directory_parts', relpath=relpath, _external=True)
+    })
 
 @api.route('/file-info/<path:relpath>', methods=['GET'])
 def file_info(relpath: str):
@@ -52,14 +57,14 @@ def file_info(relpath: str):
     print(f'{path = }')
     if not path.is_file():
         abort(404)
-    return {
+    return jsonify({
         'relpath': relpath,
         'name': path.name,
         'st_size': path.stat().st_size,
         'file_type': get_file_type(path),
         'thumbnail_url': get_thumbnail_url(path),
         'file_data_url': get_file_data_url(path)
-    }
+    })
 
 def get_file_type(path: Path) -> str:
     extension = path.suffix.lower()
@@ -103,3 +108,38 @@ def serve_thumbnail(filename: str):
 def serve_file_data(filename: str):
     files_dir = Path(current_app.config['RESOURCES_DIR']) / 'files'
     return send_from_directory(files_dir, filename)
+
+@api.route('/directory-parts/<path:relpath>', methods=['GET'])
+def directory_parts(relpath: str):
+    if '..' in relpath or '\\' in relpath:
+        abort(404)
+    return get_directory_parts(relpath)
+
+@api.route('/directory-parts/', methods=['GET'])
+def rootdir_directory_parts():
+    return get_directory_parts('.')
+
+def get_directory_parts(relpath: str):
+    rootdir = Path(current_app.config['ROOT_DIR'])
+    path = rootdir / relpath
+    if not path.is_dir():
+        abort(404)
+    parts = [{
+        'part': rootdir.as_posix(),
+        'directory-info-url': url_for('api.rootdir_directory_listing', _external=True)
+    }]
+    if path == rootdir:
+        return jsonify(parts)
+    current_path = rootdir
+    for part in path.relative_to(rootdir).parts:
+        current_path = current_path / part
+        current_relpath = current_path.relative_to(rootdir)
+        parts.append({
+            'part': part,
+            'directory-info-url': url_for(
+                'api.directory_listing',
+                relpath=current_relpath.as_posix(),
+                _external=True
+            )
+        })
+    return jsonify(parts)
