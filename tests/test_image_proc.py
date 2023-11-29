@@ -1,7 +1,9 @@
+import hashlib
 from pathlib import Path
 from unittest.mock import patch, MagicMock
-import pytest
+
 from PIL import Image
+import pytest
 
 from fileexplorer.image_proc import ImageProcessor
 
@@ -21,7 +23,8 @@ def test_make_thumbnail_success(
     thumbnail_filename = image_processor.make_thumbnail(
         file_path, thumbnail_path, (100, 100)
     )
-    assert thumbnail_filename.endswith('.png')
+    empty_md5 = hashlib.md5(b'').hexdigest()
+    assert thumbnail_filename == f'{empty_md5}.png'
     mocked_open.assert_called_once_with(file_path)
 
 @patch('PIL.Image.open', side_effect=Exception)
