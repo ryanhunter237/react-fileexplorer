@@ -21,7 +21,7 @@ class PDFProcessor(ProcessorTemplate):
             first_page = pdf.load_page(0)
             pix = first_page.get_pixmap()
             image = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
-        except Exception as e:
+        except Exception:
             return None
         thumbnail_filename = self.write_thumbnail(
             image=image,
