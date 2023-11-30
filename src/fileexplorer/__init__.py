@@ -13,6 +13,7 @@ def create_app(test_config=None):
     app.config['SUPPORTED_EXTENSIONS'] = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.pdf']#, '.stl']
     app.register_blueprint(api, url_prefix='/api')
     init_database(app)
-    build_database_async(app)
+    testing = app.config.get('TESTING', False)
+    build_database_async(app, testing)
 
     return app
