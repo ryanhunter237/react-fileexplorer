@@ -1,13 +1,16 @@
+import hashlib
 from pathlib import Path
 from urllib.parse import urlparse
 
 from flask import Flask
 from flask.testing import FlaskClient 
+from PIL import Image
 import pytest
 from pytest import TempPathFactory
 
 from fileexplorer import create_app
 
+# Helper functions for pytest tests
 def create_test_app(root_dir: Path, instance_dir: Path) -> Flask:
     resources_dir = instance_dir / 'resources'
     database_path = instance_dir / 'files.db'
@@ -19,6 +22,14 @@ def create_test_app(root_dir: Path, instance_dir: Path) -> Flask:
     }
     return create_app(test_config)
 
+def get_file_md5(file_path: Path) -> str:
+    with open(file_path, 'rb') as f:
+        file_bytes = f.read()
+    return hashlib.md5(file_bytes).hexdigest()
+
+# root_dir and test_client fixtures to test the /api/directory-parts/  
+# Directory structure is
+# root_dir/subdir1/subdir2/file.txt
 @pytest.fixture(scope="session")
 def nested_directories_root_dir(tmp_path_factory: TempPathFactory) -> Path:
     root_dir = tmp_path_factory.mktemp('root-dir')
@@ -101,31 +112,68 @@ def test_directory_parts_on_file(
     response = nested_directories_client.get('/api/directory-parts/file.txt')
     assert response.status_code == 404
 
+# root_dir and test_client fixtures to test the /api/file-info/
+# Directory structure is
+# root_dir/
+#     red-image.jpeg
+#     subdir1/text-file.txt
+@pytest.fixture(scope="session")
+def image_and_text_root_dir(tmp_path_factory: TempPathFactory) -> Path:
+    root_dir = tmp_path_factory.mktemp('root-dir')
+    img = Image.new('RGB', size=(150,150), color=(255,0,0))
+    img.save(root_dir / 'red-image.jpeg')
+    (root_dir / 'subdir').mkdir()
+    with open(root_dir / 'subdir/text-file.txt', 'w') as f:
+        f.write('a text file')
+    return root_dir
 
-# @pytest.fixture(scope="session")
-# def root_dir(tmp_path_factory: TempPathFactory):
-#     temp_dir = tmp_path_factory.mktemp("root_dir")
-#     (temp_dir / 'subdir1/subdir2').mkdir(parents=True)
-#     red_image = Image.new('RGB', size=(150,150), color=(255,0,0))
-#     red_image.save(temp_dir / 'subdir1/red_image.png')
-#     for i in range(5):
-#         path = temp_dir / f'subdir1/subdir2/file{i}.txt'
-#     yield temp_dir
+@pytest.fixture(scope="session")
+def image_and_text_client(
+    image_and_text_root_dir: Path,
+    tmp_path_factory: TempPathFactory
+) -> FlaskClient:
+    instance_dir = tmp_path_factory.mktemp('instance-dir')
+    app = create_test_app(image_and_text_root_dir, instance_dir)
+    return app.test_client()
 
-# @pytest.fixture(scope="session")
-# def app(root_dir: Path, tmp_path_factory: TempPathFactory):
-#     instance_dir = tmp_path_factory.mktemp('instance')
-#     resources_dir = instance_dir / 'resources'
-#     database_path = instance_dir / 'files.db'
-#     test_config = {
-#         "TESTING": True,
-#         "ROOT_DIR": root_dir.as_posix(),
-#         "RESOURCES_DIR": resources_dir.as_posix(),
-#         "DATABASE_PATH": database_path.as_posix()
-#     }
-#     app = create_app(test_config)
-#     yield app
+def test_file_info_on_image(
+    image_and_text_root_dir: Path,
+    image_and_text_client: FlaskClient
+):
+    img_path = image_and_text_root_dir / 'red-image.jpeg'
+    assert img_path.exists()
+    img_md5 = get_file_md5(img_path)
+    response = image_and_text_client.get('/api/file-info/red-image.jpeg')
+    assert response.status_code == 200
+    file_info = response.json
+    assert urlparse(file_info['file_data_url']).path == f'/api/file-data/{img_md5}.jpeg'
+    assert file_info['file_type'] == 'image'
+    assert file_info['name'] == 'red-image.jpeg'
+    assert file_info['relpath'] == 'red-image.jpeg'
+    thumbnail_url = urlparse(file_info['thumbnail_url'])
+    assert thumbnail_url.path.startswith('/api/thumbnails/')
+    assert thumbnail_url.path.endswith('png')
 
-# @pytest.fixture(scope="session")
-# def client(app: Flask) -> FlaskClient:
-#     return app.test_client()
+def test_file_info_on_text_file(
+    image_and_text_root_dir: Path,
+    image_and_text_client: FlaskClient
+):
+    text_path = image_and_text_root_dir / 'subdir/text-file.txt'
+    assert text_path.exists()
+    response = image_and_text_client.get('/api/file-info/subdir/text-file.txt')
+    file_info = response.json
+    assert file_info['file_data_url'] is None
+    assert file_info['file_type'] is None
+    assert file_info['name'] == 'text-file.txt'
+    assert file_info['relpath'] == 'subdir/text-file.txt'
+    assert file_info['st_size'] == len('a text file')
+    assert file_info['thumbnail_url'] is None
+
+def test_file_info_on_missing_file(
+    image_and_text_root_dir: Path,
+    image_and_text_client: FlaskClient
+):
+    missing_file_path = image_and_text_root_dir / 'missing-file'
+    assert not missing_file_path.exists()
+    response = image_and_text_client.get('/api/file-info/missing-file')
+    assert response.status_code == 404

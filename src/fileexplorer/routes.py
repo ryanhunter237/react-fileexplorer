@@ -54,7 +54,6 @@ def file_info(relpath: str):
         abort(404)
     rootdir = Path(current_app.config['ROOT_DIR'])
     path = rootdir / relpath
-    print(f'{path = }')
     if not path.is_file():
         abort(404)
     return jsonify({
