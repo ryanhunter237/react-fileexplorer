@@ -1,4 +1,5 @@
 import hashlib
+from io import BytesIO
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -264,3 +265,34 @@ def test_directory_info_subdir3(client_3: FlaskClient):
 def test_directory_info_missing_subdir(client_3: FlaskClient):
     response = client_3.get('/api/directory-info/missing-subdir')
     assert response.status_code == 404
+
+# fixtures to test /api/thumbnails/
+# Directory structure is
+# root_dir/blue-image.png
+@pytest.fixture(scope="session")
+def root_dir_4(tmp_path_factory: TempPathFactory) -> Path:
+    root_dir = tmp_path_factory.mktemp('root-dir')
+    img = Image.new('RGB', size=(150,150), color=(0,0,255))
+    img.save(root_dir / 'blue-image.png')
+    return root_dir
+
+@pytest.fixture(scope="session")
+def client_4(
+    root_dir_4: Path,
+    tmp_path_factory: TempPathFactory
+) -> FlaskClient:
+    instance_dir = tmp_path_factory.mktemp('instance-dir')
+    app = create_test_app(root_dir_4, instance_dir)
+    return app.test_client()
+
+def test_thumbnails(client_4: FlaskClient):
+    response = client_4.get('/api/file-info/blue-image.png')
+    thumbnail_url = response.json['thumbnail_url']
+    thumbnail_response = client_4.get(urlparse(thumbnail_url).path)
+    thumbnail_bytes = thumbnail_response.data
+    thumbnail_md5 = hashlib.md5(thumbnail_bytes).hexdigest()
+    assert thumbnail_url.split('/')[-1] == f'{thumbnail_md5}.png'
+    img = Image.open(BytesIO(thumbnail_bytes))
+    assert img.size == (100,100)
+    assert img.getpixel((0,0)) == (0,0,255)
+    assert img.getpixel((50,50)) == (0,0,255)
