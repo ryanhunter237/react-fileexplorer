@@ -27,7 +27,7 @@ def get_file_md5(file_path: Path) -> str:
         file_bytes = f.read()
     return hashlib.md5(file_bytes).hexdigest()
 
-# root_dir and test_client fixtures to test the /api/directory-parts/  
+# fixtures to test /api/directory-parts/  
 # Directory structure is
 # root_dir/subdir1/subdir2/file.txt
 @pytest.fixture(scope="session")
@@ -112,7 +112,7 @@ def test_directory_parts_on_file(
     response = nested_directories_client.get('/api/directory-parts/file.txt')
     assert response.status_code == 404
 
-# root_dir and test_client fixtures to test the /api/file-info/
+# fixtures to test /api/file-info/
 # Directory structure is
 # root_dir/
 #     red-image.jpeg
