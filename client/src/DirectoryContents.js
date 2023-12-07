@@ -3,7 +3,10 @@ import axios from "axios";
 import "./App.css";
 
 const DirectoryContents = ({ currentPath, onPathChange }) => {
-  const [directoryInfo, setDirectoryInfo] = useState({ directories: [] });
+  const [directoryInfo, setDirectoryInfo] = useState({
+    directories: [],
+    files: [],
+  });
   useEffect(() => {
     axios
       .get(`/api/directory-info/${currentPath}`)
@@ -36,6 +39,13 @@ const DirectoryContents = ({ currentPath, onPathChange }) => {
                   {info["name"]}
                 </button>
               </td>
+              <td></td>
+              <td></td>
+            </tr>
+          ))}
+          {directoryInfo["files"].map((info, index) => (
+            <tr key={index}>
+              <td>{info["name"]}</td>
               <td></td>
               <td></td>
             </tr>
