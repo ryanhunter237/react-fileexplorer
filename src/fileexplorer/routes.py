@@ -25,8 +25,8 @@ def get_directory_listing(relpath: str):
     files = []
     directories = []
     for child_path in path.glob('*'):
-        child_data = {'name': child_path.name}
         child_relpath = child_path.relative_to(rootdir)
+        child_data = {'name': child_path.name, 'relpath': child_relpath.as_posix()}
         if child_path.is_file():
             child_data['link'] = url_for(
                 'api.file_info',
