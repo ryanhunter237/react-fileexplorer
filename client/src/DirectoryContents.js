@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import "./Breadcrumbs.css";
 
 const DirectoryContents = ({ currentPath, onPathChange }) => {
   const [directoryInfo, setDirectoryInfo] = useState({ directories: [] });
@@ -26,7 +27,15 @@ const DirectoryContents = ({ currentPath, onPathChange }) => {
         <tbody>
           {directoryInfo["directories"].map((info, index) => (
             <tr key={index}>
-              <td> {info["name"]} </td>
+              <td>
+                <button
+                  type="button"
+                  className="breadcrumb-link"
+                  onClick={() => onPathChange(info["relpath"])}
+                >
+                  {info["name"]}
+                </button>
+              </td>
               <td></td>
               <td></td>
             </tr>

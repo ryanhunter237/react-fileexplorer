@@ -3,9 +3,7 @@ import Breadcrumbs from "./Breadcrumbs";
 import DirectoryContents from "./DirectoryContents";
 
 const FileExplorer = () => {
-  const [currentPath, setCurrentPath] = useState(
-    "key-way-vice-solidworks-1/Key Way Vice Solidworks"
-  );
+  const [currentPath, setCurrentPath] = useState("");
   return (
     <div className="container-fluid pt-3 pb-3">
       <div className="row">
@@ -19,7 +17,10 @@ const FileExplorer = () => {
       <div className="row flex-grow-1">
         <div className="col-md-5">
           <div className="table-container">
-            <DirectoryContents currentPath={currentPath} />
+            <DirectoryContents
+              currentPath={currentPath}
+              onPathChange={setCurrentPath}
+            />
           </div>
         </div>
         <div className="col-md-7">
