@@ -1,0 +1,17 @@
+.breadcrumb-link {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: inherit; /* Ensures font size is inherited from parent */
+  line-height: inherit; /* Ensures line height is consistent with non-button elements */
+}
+
+.breadcrumb-item .breadcrumb-link:disabled {
+  color: gray;
+  text-decoration: none;
+  cursor: default;
+}
