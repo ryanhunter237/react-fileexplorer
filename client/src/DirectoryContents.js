@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./Breadcrumbs.css";
+import "./App.css";
 
 const DirectoryContents = ({ currentPath, onPathChange }) => {
   const [directoryInfo, setDirectoryInfo] = useState({ directories: [] });
@@ -30,7 +30,7 @@ const DirectoryContents = ({ currentPath, onPathChange }) => {
               <td>
                 <button
                   type="button"
-                  className="breadcrumb-link"
+                  className="directory-button"
                   onClick={() => onPathChange(info["relpath"])}
                 >
                   {info["name"]}

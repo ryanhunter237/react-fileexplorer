@@ -1,9 +1,8 @@
-import "./Breadcrumbs.css";
+import "./App.css";
 
 function getBreadcrumbs(path) {
   let components = path.split("/");
-  let result = [["", "."]];
-  if (path == ".") return result;
+  let result = [["", "home"]];
   let currentPath = "";
 
   for (let i = 0; i < components.length; i++) {
@@ -22,25 +21,14 @@ const Breadcrumbs = ({ currentPath, onPathChange }) => {
     <nav aria-label="breadcrumb">
       <ol className="breadcrumb">
         {breadcrumbs.map((crumb, index) => (
-          <li
-            key={index}
-            className={`breadcrumb-item ${
-              index === breadcrumbs.length - 1 ? "active" : ""
-            }`}
-          >
-            {index !== breadcrumbs.length - 1 ? (
-              <button
-                type="button"
-                className="breadcrumb-link"
-                onClick={() => onPathChange(crumb[0])}
-              >
-                {crumb[1]}
-              </button>
-            ) : (
-              <span className="breadcrumb-link" style={{ cursor: "default" }}>
-                {crumb[1]}
-              </span>
-            )}
+          <li key={index} className="breadcrumb-item">
+            <button
+              type="button"
+              className="directory-button"
+              onClick={() => onPathChange(crumb[0])}
+            >
+              {crumb[1]}
+            </button>
           </li>
         ))}
       </ol>
