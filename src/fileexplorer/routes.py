@@ -30,22 +30,20 @@ def get_directory_listing(relpath: str):
         if child_path.is_file():
             child_data['link'] = url_for(
                 'api.file_info',
-                relpath=child_relpath.as_posix(),
-                _external=True
+                relpath=child_relpath.as_posix()
             )
             files.append(child_data)
         elif child_path.is_dir():
             child_data['link'] = url_for(
                 'api.directory_listing',
                 relpath=child_relpath.as_posix(),
-                _external=True
             )
             directories.append(child_data)
     return jsonify({
         'relpath': relpath,
         'files': files,
         'directories': directories,
-        'parts': url_for('api.directory_parts', relpath=relpath, _external=True)
+        'parts': url_for('api.directory_parts', relpath=relpath)
     })
 
 @api.route('/file-info/<path:relpath>', methods=['GET'])
@@ -85,7 +83,6 @@ def get_thumbnail_url(path: Path) -> str:
     return url_for(
         'api.serve_thumbnail',
         filename=thumbnail_filename,
-        _external=True
     )
 
 def get_file_data_url(path: Path) -> str:
@@ -95,7 +92,6 @@ def get_file_data_url(path: Path) -> str:
     return url_for(
         'api.serve_file_data',
         filename=data_filename,
-        _external=True
     )
 
 @api.route('/thumbnails/<path:filename>', methods=['GET'])
@@ -125,7 +121,7 @@ def get_directory_parts(relpath: str):
         abort(404)
     parts = [{
         'part': rootdir.as_posix(),
-        'directory-info-url': url_for('api.rootdir_directory_listing', _external=True)
+        'directory-info-url': url_for('api.rootdir_directory_listing')
     }]
     if path == rootdir:
         return jsonify(parts)
@@ -138,7 +134,6 @@ def get_directory_parts(relpath: str):
             'directory-info-url': url_for(
                 'api.directory_listing',
                 relpath=current_relpath.as_posix(),
-                _external=True
             )
         })
     return jsonify(parts)

@@ -1,0 +1,26 @@
+table tr td:nth-child(2) {
+  text-align: right;
+}
+
+.table-container {
+  max-height: calc(
+    100vh - 75px
+  ); /* Set the maximum height for the table container */
+  overflow-y: auto; /* Enable vertical scrolling */
+  border: 1px solid #ccc;
+}
+
+table {
+  position: relative; /* Necessary for fixed headers */
+}
+
+th {
+  position: sticky; /* Sticky headers */
+  top: 0;
+  z-index: 2; /* Place header above table cells */
+}
+
+td {
+  /* padding: 8px; */
+  vertical-align: middle;
+}

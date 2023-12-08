@@ -1,6 +1,71 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./App.css";
+import "./Button.css";
+import "./Table.css";
+
+function convertSize(size) {
+  size = parseFloat(size);
+  const suffixes = ["B", "KB", "MB", "GB"];
+  let suffixIdx = 0;
+  while (size >= 1024 && suffixIdx < 3) {
+    size /= 1024;
+    suffixIdx++;
+  }
+  return `${Math.round(size)} ${suffixes[suffixIdx]}`;
+}
+
+const FileRow = ({ fileInfoUrl }) => {
+  const [fileInfo, setFileInfo] = useState({
+    relpath: "",
+    name: "",
+    st_size: "",
+    file_type: "",
+    thumbnail_url: "",
+    file_data_url: "",
+  });
+
+  useEffect(() => {
+    axios
+      .get(fileInfoUrl)
+      .then((response) => {
+        setFileInfo(response.data);
+      })
+      .catch((error) =>
+        console.error(`Error fetching file details from ${fileInfoUrl}:`, error)
+      );
+  }, [fileInfoUrl]);
+
+  // Need to check when thumbnail_url is 'processing' or 'error'
+  return (
+    <tr>
+      <td>{fileInfo.name}</td>
+      <td>{convertSize(fileInfo.st_size)}</td>
+      <td>
+        {fileInfo.thumbnail_url ? (
+          <img src={fileInfo.thumbnail_url} alt="Thumbnail" />
+        ) : null}
+      </td>
+    </tr>
+  );
+};
+
+const DirectoryRow = ({ name, relpath, onPathChange }) => {
+  return (
+    <tr>
+      <td>
+        <button
+          type="button"
+          className="directory-button"
+          onClick={() => onPathChange(relpath)}
+        >
+          {name}
+        </button>
+      </td>
+      <td></td>
+      <td></td>
+    </tr>
+  );
+};
 
 const DirectoryContents = ({ currentPath, onPathChange }) => {
   const [directoryInfo, setDirectoryInfo] = useState({
@@ -15,7 +80,6 @@ const DirectoryContents = ({ currentPath, onPathChange }) => {
       })
       .catch((error) => console.error("Error fetching data:", error));
   }, [currentPath]);
-  console.log(directoryInfo["directories"]);
 
   return (
     <div className="table-container">
@@ -28,27 +92,16 @@ const DirectoryContents = ({ currentPath, onPathChange }) => {
           </tr>
         </thead>
         <tbody>
-          {directoryInfo["directories"].map((info, index) => (
-            <tr key={index}>
-              <td>
-                <button
-                  type="button"
-                  className="directory-button"
-                  onClick={() => onPathChange(info["relpath"])}
-                >
-                  {info["name"]}
-                </button>
-              </td>
-              <td></td>
-              <td></td>
-            </tr>
+          {directoryInfo["directories"].map((info) => (
+            <DirectoryRow
+              key={info.name}
+              name={info.name}
+              relpath={info.relpath}
+              onPathChange={onPathChange}
+            />
           ))}
-          {directoryInfo["files"].map((info, index) => (
-            <tr key={index}>
-              <td>{info["name"]}</td>
-              <td></td>
-              <td></td>
-            </tr>
+          {directoryInfo["files"].map((info) => (
+            <FileRow key={info.name} fileInfoUrl={info.link} />
           ))}
         </tbody>
       </table>
