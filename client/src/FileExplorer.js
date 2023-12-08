@@ -17,12 +17,10 @@ const FileExplorer = () => {
       </div>
       <div className="row flex-grow-1">
         <div className="col-md-5">
-          <div className="table-container">
-            <DirectoryContents
-              currentPath={currentPath}
-              onPathChange={setCurrentPath}
-            />
-          </div>
+          <DirectoryContents
+            currentPath={currentPath}
+            onPathChange={setCurrentPath}
+          />
         </div>
         <div className="col-md-7">
           <div id="vis-panel" className="d-none">

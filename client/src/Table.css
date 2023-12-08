@@ -7,7 +7,7 @@ table tr td:nth-child(2) {
     100vh - 75px
   ); /* Set the maximum height for the table container */
   overflow-y: auto; /* Enable vertical scrolling */
-  /* border: 1px solid #ccc; */
+  border: 2px solid #ccc;
 }
 
 table {
@@ -23,4 +23,10 @@ th {
 td {
   /* padding: 8px; */
   vertical-align: middle;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
 }

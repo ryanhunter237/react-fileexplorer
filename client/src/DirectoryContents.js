@@ -38,7 +38,10 @@ const FileRow = ({ fileInfoUrl }) => {
   // Need to check when thumbnail_url is 'processing' or 'error'
   return (
     <tr>
-      <td>{fileInfo.name}</td>
+      <td>
+        <img src="/images/file.png" class="icon" alt="File Icon" />
+        {fileInfo.name}
+      </td>
       <td>{convertSize(fileInfo.st_size)}</td>
       <td>
         {fileInfo.thumbnail_url ? (
@@ -53,6 +56,7 @@ const DirectoryRow = ({ name, relpath, onPathChange }) => {
   return (
     <tr>
       <td>
+        <img src="/images/folder.png" class="icon" alt="Folder Icon" />
         <button
           type="button"
           className="directory-button"
