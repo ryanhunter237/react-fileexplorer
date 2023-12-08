@@ -1,0 +1,9 @@
+.container-fluid {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.row.flex-grow-1 {
+  flex-grow: 1;
+}

@@ -7,7 +7,7 @@ table tr td:nth-child(2) {
     100vh - 75px
   ); /* Set the maximum height for the table container */
   overflow-y: auto; /* Enable vertical scrolling */
-  border: 1px solid #ccc;
+  /* border: 1px solid #ccc; */
 }
 
 table {

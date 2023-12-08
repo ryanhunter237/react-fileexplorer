@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Breadcrumbs from "./Breadcrumbs";
 import DirectoryContents from "./DirectoryContents";
+import "./FileExplorer.css";
 
 const FileExplorer = () => {
   const [currentPath, setCurrentPath] = useState("");
