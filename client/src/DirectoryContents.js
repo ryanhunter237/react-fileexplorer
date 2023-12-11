@@ -15,7 +15,7 @@ function convertSize(size) {
   return `${Math.round(size)} ${suffixes[suffixIdx]}`;
 }
 
-const FileRow = ({ fileInfoUrl }) => {
+const FileRow = ({ fileInfoUrl, setCanvasInfo }) => {
   const [fileInfo, setFileInfo] = useState({
     relpath: "",
     name: "",
@@ -36,6 +36,14 @@ const FileRow = ({ fileInfoUrl }) => {
       );
   }, [fileInfoUrl]);
 
+  const handleImageClick = (dataUrl, fileType) => {
+    setCanvasInfo({
+      show: true,
+      dataUrl: dataUrl,
+      fileType: fileType,
+    });
+  };
+
   // Need to check when thumbnail_url is 'processing' or 'error'
   return (
     <tr>
@@ -46,7 +54,14 @@ const FileRow = ({ fileInfoUrl }) => {
       <td>{convertSize(fileInfo.st_size)}</td>
       <td>
         {fileInfo.thumbnail_url ? (
-          <img src={fileInfo.thumbnail_url} alt="Thumbnail" />
+          <img
+            src={fileInfo.thumbnail_url}
+            alt="Thumbnail"
+            onClick={() =>
+              handleImageClick(fileInfo.file_data_url, fileInfo.file_type)
+            }
+            style={{ cursor: "pointer" }}
+          />
         ) : null}
       </td>
     </tr>
@@ -66,7 +81,7 @@ const DirectoryRow = ({ name, relpath }) => {
   );
 };
 
-const DirectoryContents = ({ currentPath }) => {
+const DirectoryContents = ({ currentPath, setCanvasInfo }) => {
   const [directoryInfo, setDirectoryInfo] = useState({
     directories: [],
     files: [],
@@ -99,7 +114,11 @@ const DirectoryContents = ({ currentPath }) => {
             />
           ))}
           {directoryInfo["files"].map((info) => (
-            <FileRow key={info.name} fileInfoUrl={info.link} />
+            <FileRow
+              key={info.name}
+              fileInfoUrl={info.link}
+              setCanvasInfo={setCanvasInfo}
+            />
           ))}
         </tbody>
       </table>

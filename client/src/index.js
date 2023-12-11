@@ -5,7 +5,6 @@ import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-const currentPath = "key-way-vice-solidworks-1/Key Way Vice Solidworks/Drawing";
 root.render(
   <React.StrictMode>
     <FileExplorer />
