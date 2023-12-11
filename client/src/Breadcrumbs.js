@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./Button.css";
 
 function getBreadcrumbs(path) {
@@ -15,20 +16,14 @@ function getBreadcrumbs(path) {
   return result;
 }
 
-const Breadcrumbs = ({ currentPath, onPathChange }) => {
+const Breadcrumbs = ({ currentPath }) => {
   const breadcrumbs = getBreadcrumbs(currentPath);
   return (
     <nav aria-label="breadcrumb">
       <ol className="breadcrumb">
         {breadcrumbs.map((crumb, index) => (
           <li key={index} className="breadcrumb-item">
-            <button
-              type="button"
-              className="directory-button"
-              onClick={() => onPathChange(crumb[0])}
-            >
-              {crumb[1]}
-            </button>
+            <Link to={`/${crumb[0]}`}>{crumb[1]}</Link>
           </li>
         ))}
       </ol>

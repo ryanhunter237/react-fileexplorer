@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import "./Button.css";
 import "./Table.css";
@@ -39,7 +40,7 @@ const FileRow = ({ fileInfoUrl }) => {
   return (
     <tr>
       <td>
-        <img src="/images/file.png" class="icon" alt="File Icon" />
+        <img src="/images/file.png" className="icon" alt="File Icon" />
         {fileInfo.name}
       </td>
       <td>{convertSize(fileInfo.st_size)}</td>
@@ -52,18 +53,12 @@ const FileRow = ({ fileInfoUrl }) => {
   );
 };
 
-const DirectoryRow = ({ name, relpath, onPathChange }) => {
+const DirectoryRow = ({ name, relpath }) => {
   return (
     <tr>
       <td>
-        <img src="/images/folder.png" class="icon" alt="Folder Icon" />
-        <button
-          type="button"
-          className="directory-button"
-          onClick={() => onPathChange(relpath)}
-        >
-          {name}
-        </button>
+        <img src="/images/folder.png" className="icon" alt="Folder Icon" />
+        <Link to={`/${relpath}`}>{name}</Link>
       </td>
       <td></td>
       <td></td>
@@ -71,7 +66,7 @@ const DirectoryRow = ({ name, relpath, onPathChange }) => {
   );
 };
 
-const DirectoryContents = ({ currentPath, onPathChange }) => {
+const DirectoryContents = ({ currentPath }) => {
   const [directoryInfo, setDirectoryInfo] = useState({
     directories: [],
     files: [],
@@ -101,7 +96,6 @@ const DirectoryContents = ({ currentPath, onPathChange }) => {
               key={info.name}
               name={info.name}
               relpath={info.relpath}
-              onPathChange={onPathChange}
             />
           ))}
           {directoryInfo["files"].map((info) => (
