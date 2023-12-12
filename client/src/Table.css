@@ -2,6 +2,10 @@ table tr td:nth-child(2) {
   text-align: right;
 }
 
+table tr td:nth-child(3) {
+  text-align: center;
+}
+
 .table-container {
   max-height: calc(
     100vh - 75px
@@ -34,4 +38,8 @@ td {
 #vis-panel {
   width: 100%;
   height: 100%;
+}
+
+.img-preview {
+  cursor: pointer;
 }

@@ -60,7 +60,7 @@ const FileRow = ({ fileInfoUrl, setCanvasInfo }) => {
             onClick={() =>
               handleImageClick(fileInfo.file_data_url, fileInfo.file_type)
             }
-            style={{ cursor: "pointer" }}
+            className="img-thumbnail img-preview"
           />
         ) : null}
       </td>
