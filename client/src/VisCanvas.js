@@ -15,22 +15,17 @@ const PdfCanvas = ({ dataUrl }) => {
 };
 
 const VisCanvas = ({ canvasInfo }) => {
-  // 'image', 'pdf', 'stl'
+  let content;
+
   if (canvasInfo.fileType === "image") {
-    return (
-      <div id="vis-panel">
-        <ImgCanvas dataUrl={canvasInfo.dataUrl} />
-      </div>
-    );
+    content = <ImgCanvas dataUrl={canvasInfo.dataUrl} />;
   } else if (canvasInfo.fileType === "pdf") {
-    return (
-      <div id="vis-panel">
-        <PdfCanvas dataUrl={canvasInfo.dataUrl} />
-      </div>
-    );
+    content = <PdfCanvas dataUrl={canvasInfo.dataUrl} />;
   } else {
-    return <div id="vis-panel">{canvasInfo.dataUrl}</div>;
+    content = canvasInfo.dataUrl;
   }
+
+  return <div id="vis-panel">{content}</div>;
 };
 
 export default VisCanvas;
