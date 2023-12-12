@@ -7,7 +7,7 @@ from fileexplorer.proc import ProcessorTemplate
 
 PDF_EXTENSIONS = ('.pdf',)
 
-class PDFProcessor(ProcessorTemplate):
+class PdfProcessor(ProcessorTemplate):
     extensions = PDF_EXTENSIONS
 
     def make_thumbnail(

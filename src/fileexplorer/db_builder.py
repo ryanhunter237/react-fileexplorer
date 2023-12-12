@@ -10,7 +10,8 @@ from fileexplorer.models import (
     insert_data_file,
 )
 from fileexplorer.image_proc import ImageProcessor
-from fileexplorer.pdf_proc import PDFProcessor
+from fileexplorer.pdf_proc import PdfProcessor
+from fileexplorer.stl_proc import StlProcessor
 
 THUMBNAIL_SIZE = (100, 100)
 
@@ -41,7 +42,7 @@ def build_database(
     models.DATABASE_PATH = database_path
     create_tables()
     make_resources_directories(resources_dir)
-    processors = [ImageProcessor(), PDFProcessor()]
+    processors = [ImageProcessor(), PdfProcessor(), StlProcessor()]
     for file_path in Path(root_dir).rglob("*"):
         if not file_path.is_file():
             continue

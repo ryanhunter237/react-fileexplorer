@@ -12,5 +12,10 @@ description = "A file explorer Flask app"
 readme = "README.md"
 dependencies = [
     "flask",
+    "matplotlib",
+    "numpy",
+    "numpy-stl",
+    "pillow",
+    "pymupdf",
     "python-dotenv",
 ]
