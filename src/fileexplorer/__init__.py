@@ -10,7 +10,7 @@ def create_app(test_config=None):
         app.config.update(test_config)
     else:
         app.config.from_prefixed_env(prefix='FILEEXPLORER')
-    app.config['SUPPORTED_EXTENSIONS'] = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.pdf']#, '.stl']
+    app.config['SUPPORTED_EXTENSIONS'] = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.pdf', '.stl']
     app.register_blueprint(api, url_prefix='/api')
     init_database(app)
     testing = app.config.get('TESTING', False)
