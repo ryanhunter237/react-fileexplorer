@@ -1,0 +1,11 @@
+#reset-button {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  left: 10px;
+  background-color: #0074d9;
+  color: #fff;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+}
