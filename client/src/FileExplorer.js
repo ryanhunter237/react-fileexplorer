@@ -59,6 +59,7 @@ const FileExplorerContent = () => {
           />
         </div>
         <div className="col-md-7">
+          {/* <div id="vis-panel">{canvasInfo.dataUrl}</div> */}
           {canvasInfo.show && <VisCanvas canvasInfo={canvasInfo} />}
         </div>
       </div>

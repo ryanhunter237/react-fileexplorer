@@ -85,7 +85,7 @@ const StlViewer = ({ dataUrl }) => {
   };
 
   return (
-    <>
+    <div id="vis-display">
       <Canvas>
         <Model
           url={dataUrl}
@@ -104,7 +104,7 @@ const StlViewer = ({ dataUrl }) => {
       <button id="reset-button" onClick={handleResetControls}>
         Reset View
       </button>
-    </>
+    </div>
   );
 };
 
