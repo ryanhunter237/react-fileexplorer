@@ -4,7 +4,7 @@
 }
 
 .table-container {
-  max-height: calc(100vh - 75px);
+  max-height: calc(100vh - 50px);
   overflow-y: auto;
   border: 2px solid #ccc;
 }
@@ -16,6 +16,7 @@ table tr td:nth-child(2) {
 table {
   position: relative;
   border-collapse: collapse;
+  width: 100%;
 }
 
 th {
@@ -30,6 +31,7 @@ tr th {
 
 td {
   vertical-align: middle;
+  padding: 10px;
 }
 
 table tbody tr:nth-child(odd) {
