@@ -1,18 +1,6 @@
-html,
-body {
+.grid-container {
+  display: grid;
   height: 100%;
-}
-
-#root {
-  height: 100%;
-}
-
-.container-fluid {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.row.flex-grow-1 {
-  flex-grow: 1;
+  grid-template-rows: min-content auto;
+  grid-template-columns: 1fr 1fr;
 }

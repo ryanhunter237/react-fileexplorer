@@ -14,11 +14,9 @@ import "./FileExplorer.css";
 const FileExplorer = () => {
   return (
     <BrowserRouter>
-      <div className="container-fluid pt-3 pb-3">
-        <Routes>
-          <Route path="/*" element={<FileExplorerContent />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/*" element={<FileExplorerContent />} />
+      </Routes>
     </BrowserRouter>
   );
 };
@@ -45,25 +43,14 @@ const FileExplorerContent = () => {
     });
   });
   return (
-    <>
-      <div className="row">
-        <div className="col">
-          <Breadcrumbs currentPath={currentPath} />
-        </div>
-      </div>
-      <div className="row flex-grow-1">
-        <div className="col-md-5">
-          <DirectoryContents
-            currentPath={currentPath}
-            setCanvasInfo={setCanvasInfo}
-          />
-        </div>
-        <div className="col-md-7">
-          {/* <div id="vis-panel">{canvasInfo.dataUrl}</div> */}
-          {canvasInfo.show && <VisCanvas canvasInfo={canvasInfo} />}
-        </div>
-      </div>
-    </>
+    <div className="grid-container">
+      <Breadcrumbs currentPath={currentPath} />
+      <DirectoryContents
+        currentPath={currentPath}
+        setCanvasInfo={setCanvasInfo}
+      />
+      {canvasInfo.show && <VisCanvas canvasInfo={canvasInfo} />}
+    </div>
   );
 };
 

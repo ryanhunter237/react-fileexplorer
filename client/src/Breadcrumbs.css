@@ -1,0 +1,32 @@
+.header {
+  grid-column: 1 / -1;
+  grid-row: 1;
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 13px;
+}
+
+.breadcrumb-item {
+  padding: 2px 6px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 20px;
+}
+
+.breadcrumb-item:link,
+.breadcrumb-item:visited {
+  color: #0000ee;
+}
+.breadcrumb-item:hover {
+  background-color: #ced4da;
+}
+
+.path-separator {
+  font-size: 26px;
+  font-weight: 600;
+  padding-top: 2px;
+}

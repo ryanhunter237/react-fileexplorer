@@ -2,7 +2,7 @@ import StlCanvas from "./StlCanvas";
 import "./VisCanvas.css";
 
 const ImgCanvas = ({ dataUrl }) => {
-  return <img src={dataUrl} className="img-fluid" />;
+  return <img src={dataUrl} className="img-fluid" alt="canvas" />;
 };
 
 const PdfCanvas = ({ dataUrl }) => {
@@ -28,7 +28,7 @@ const VisCanvas = ({ canvasInfo }) => {
     content = canvasInfo.dataUrl;
   }
 
-  return <div id="vis-panel">{content}</div>;
+  return <div id="vis-panel right-side">{content}</div>;
 };
 
 export default VisCanvas;

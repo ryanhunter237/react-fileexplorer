@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import "./Button.css";
 import "./Table.css";
 
 function convertSize(size) {
@@ -48,8 +47,10 @@ const FileRow = ({ fileInfoUrl, setCanvasInfo }) => {
   return (
     <tr>
       <td>
-        <img src="/images/file.png" className="icon" alt="File Icon" />
-        {fileInfo.name}
+        <div className="file-name">
+          <img src="/images/file.png" className="icon" alt="File Icon" />
+          {fileInfo.name}
+        </div>
       </td>
       <td>{convertSize(fileInfo.st_size)}</td>
       <td>
@@ -72,8 +73,10 @@ const DirectoryRow = ({ name, relpath }) => {
   return (
     <tr>
       <td>
-        <img src="/images/folder.png" className="icon" alt="Folder Icon" />
-        <Link to={`/${relpath}`}>{name}</Link>
+        <Link to={`/${relpath}`} className="directory-link">
+          <img src="/images/folder.png" className="icon" alt="Folder Icon" />
+          {name}
+        </Link>
       </td>
       <td></td>
       <td></td>
@@ -96,13 +99,13 @@ const DirectoryContents = ({ currentPath, setCanvasInfo }) => {
   }, [currentPath]);
 
   return (
-    <div className="table-container">
-      <table className="table table-bordered table-striped">
+    <div className="table-container left-side">
+      <table>
         <thead>
           <tr>
-            <th style={{ width: "60%" }}>Name</th>
-            <th style={{ width: "17%" }}>Size</th>
-            <th style={{ width: "23%" }}>Thumbnail</th>
+            <th>Name</th>
+            <th>Size</th>
+            <th>Thumbnail</th>
           </tr>
         </thead>
         <tbody>
