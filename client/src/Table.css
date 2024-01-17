@@ -34,8 +34,13 @@ td {
   padding: 10px;
 }
 
+th {
+  padding: 5px;
+  background-color: #dee2e6; /* GRAY 3 */
+}
+
 table tbody tr:nth-child(odd) {
-  background-color: #f1f3f5;
+  background-color: #f1f3f5; /* GRAY 1 */
 }
 
 .icon {
@@ -62,7 +67,7 @@ table tbody tr:nth-child(odd) {
 }
 
 .directory-link:hover {
-  background-color: #ced4da;
+  background-color: #ced4da; /* GRAY 4 */
 }
 
 .file-name {
