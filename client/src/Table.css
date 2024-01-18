@@ -105,3 +105,10 @@ table tbody tr:nth-child(odd) {
   align-items: center;
   gap: 5px;
 }
+
+td img:hover {
+  padding: 4px 4px;
+  border-radius: 6px;
+  background-color: #adb5bd;
+  margin: -4px;
+}
