@@ -1,22 +1,50 @@
+/* 
+gray0: #f8f9fa
+gray1: #f1f3f5
+gray2: #e9ecef
+gray3: #dee2e6
+gray4: #ced4da
+gray5: #adb5bd
+gray6: #868e96
+gray7: #495057
+gray8: #343a40
+gray9: #212529
+*/
+
+/* Put table on left panel */
 .left-side {
   grid-column: 1;
   grid-row: 2;
 }
 
+/* For scrollable table */
 .table-container {
   max-height: calc(100vh - 50px);
   overflow-y: auto;
-  border: 2px solid #ccc;
-}
-
-table tr td:nth-child(2) {
-  text-align: right;
+  border: 2px solid #adb5bd; /* GRAY 5 */
+  width: 100%;
 }
 
 table {
   position: relative;
   border-collapse: collapse;
   width: 100%;
+}
+
+table tr td:nth-child(1) {
+  width: 50%;
+  word-break: break-all;
+}
+
+table tr td:nth-child(2) {
+  width: 20%;
+  min-width: 90px;
+  text-align: right;
+}
+
+table tr td:nth-child(3) {
+  width: 30%;
+  text-align: center;
 }
 
 th {
@@ -26,7 +54,7 @@ th {
 }
 
 tr th {
-  font-size: 24px;
+  font-size: 22px;
 }
 
 td {
@@ -36,11 +64,11 @@ td {
 
 th {
   padding: 5px;
-  background-color: #dee2e6; /* GRAY 3 */
+  background-color: #ced4da; /* GRAY 4 */
 }
 
 table tbody tr:nth-child(odd) {
-  background-color: #f1f3f5; /* GRAY 1 */
+  background-color: #e9ecef; /* GRAY 2 */
 }
 
 .icon {
@@ -67,7 +95,7 @@ table tbody tr:nth-child(odd) {
 }
 
 .directory-link:hover {
-  background-color: #ced4da; /* GRAY 4 */
+  background-color: #adb5bd; /* GRAY 5 */
 }
 
 .file-name {

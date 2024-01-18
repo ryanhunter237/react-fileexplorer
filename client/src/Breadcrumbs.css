@@ -21,7 +21,7 @@
   color: #0000ee;
 }
 .breadcrumb-item:hover {
-  background-color: #ced4da;
+  background-color: #adb5bd; /* GRAY 5 */
 }
 
 .path-separator {
