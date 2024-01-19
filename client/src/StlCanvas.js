@@ -43,9 +43,9 @@ const StlCanvas = ({ dataUrl }) => {
   const containerRef = useRef(null);
   const controlsRef = useRef(null);
   const initialViewRef = useRef(null);
-  const scene = new THREE.Scene();
 
   useEffect(() => {
+    const scene = new THREE.Scene();
     const container = containerRef.current;
     const width = container.clientWidth;
     const height = container.clientHeight;
