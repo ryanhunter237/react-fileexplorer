@@ -1,12 +1,4 @@
-#vis-display {
-  position: relative;
-  min-width: 0;
-  width: 99%;
-  height: 99%;
-  background-color: cadetblue;
-}
-
-#reset-button {
+.reset-button {
   position: absolute;
   z-index: 1;
   top: 10px;

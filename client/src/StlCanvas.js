@@ -1,35 +1,34 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Canvas, useLoader } from "@react-three/fiber";
-import { PerspectiveCamera, TrackballControls } from "@react-three/drei";
+import React, { useRef, useEffect } from "react";
 import * as THREE from "three";
-import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
+import { TrackballControls } from "three/addons/controls/TrackballControls";
+import { STLLoader } from "three/addons/loaders/STLLoader";
 import "./StlCanvas.css";
 
-const Model = ({ url, meshRef, onGeometryLoad }) => {
-  console.log(`url = ${url}`);
-  const geometry = useLoader(STLLoader, url);
-
-  useEffect(() => {
-    if (meshRef.current) onGeometryLoad(true);
-  }, [meshRef, onGeometryLoad]);
-
-  return (
-    <mesh ref={meshRef} geometry={geometry}>
-      <meshNormalMaterial />
-    </mesh>
-  );
+const loadSTL = (url) => {
+  return new Promise((resolve, reject) => {
+    const loader = new STLLoader();
+    loader.load(
+      url,
+      (geometry) => {
+        const material = new THREE.MeshNormalMaterial();
+        const mesh = new THREE.Mesh(geometry, material);
+        resolve(mesh);
+      },
+      undefined,
+      (error) => {
+        reject(error);
+      }
+    );
+  });
 };
 
-const computeInitialControls = (meshRef, controlsRef) => {
-  if (!meshRef.current || !controlsRef.current) return;
-
-  const bbox = new THREE.Box3().setFromObject(meshRef.current);
+const computePositions = (camera, mesh) => {
+  const bbox = new THREE.Box3().setFromObject(mesh);
   const center = bbox.getCenter(new THREE.Vector3());
-  const camera = controlsRef.current.object;
   const size = bbox.getSize(new THREE.Vector3());
   const maxDim = Math.max(size.x, size.y, size.z);
   const fov = camera.fov * (Math.PI / 180);
-  const radius = 0.5 * Math.abs((maxDim / 2) * Math.tan(fov * 2));
+  const radius = 3.5 * Math.abs((maxDim / 2) * Math.tan(fov * 2));
   const direction = new THREE.Vector3(0.61545745, -0.61545745, 0.49236596);
   const position = center.clone().addScaledVector(direction, radius);
 
@@ -40,72 +39,98 @@ const computeInitialControls = (meshRef, controlsRef) => {
   };
 };
 
-const ControlsSetup = ({
-  meshRef,
-  controlsRef,
-  isModelLoaded,
-  onControlsSetup,
-}) => {
-  useEffect(() => {
-    if (isModelLoaded) {
-      const initialControls = computeInitialControls(meshRef, controlsRef);
-      if (initialControls) {
-        onControlsSetup(initialControls);
+const StlCanvas = ({ dataUrl }) => {
+  const containerRef = useRef(null);
+  const controlsRef = useRef(null);
+  const initialViewRef = useRef(null);
+  const scene = new THREE.Scene();
 
-        controlsRef.current.target.copy(initialControls.target);
-        controlsRef.current.object.position.copy(
-          initialControls.cameraPosition
-        );
-        controlsRef.current.object.up.copy(initialControls.cameraUp);
+  useEffect(() => {
+    const container = containerRef.current;
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(width, height);
+    // make the domElement have absolute position to avoid layout thrashing
+    renderer.domElement.style.position = "absolute";
+    container.appendChild(renderer.domElement);
+    controlsRef.current = new TrackballControls(camera, renderer.domElement);
+
+    loadSTL(dataUrl)
+      .then((mesh) => {
+        scene.add(mesh);
+        const bbox = new THREE.Box3().setFromObject(mesh);
+        const helper = new THREE.Box3Helper(bbox, 0xff0000);
+        scene.add(helper);
+        const positions = computePositions(camera, mesh);
+
+        initialViewRef.current = {
+          target: positions.target.clone(),
+          cameraPosition: positions.cameraPosition.clone(),
+          cameraUp: positions.cameraUp.clone(),
+        };
+
+        if (controlsRef.current) {
+          controlsRef.current.target.copy(positions.target);
+        }
+        camera.position.copy(positions.cameraPosition);
+        camera.up.copy(positions.cameraUp);
+        controlsRef.current?.update();
+      })
+      .catch((error) => {
+        console.error("Error loading STL file:", error);
+      });
+
+    const animate = () => {
+      requestAnimationFrame(animate);
+      if (controlsRef.current) {
         controlsRef.current.update();
       }
-    }
-  }, [meshRef, controlsRef, isModelLoaded, onControlsSetup]);
+      renderer.render(scene, camera);
+    };
 
-  return null;
-};
+    animate();
 
-const StlViewer = ({ dataUrl }) => {
-  const meshRef = useRef();
-  const controlsRef = useRef();
-  const [isModelLoaded, setModelLoaded] = useState(false);
-  const [initialControls, setInitialControls] = useState({
-    target: new THREE.Vector3(),
-    cameraPosition: new THREE.Vector3(),
-    cameraUp: new THREE.Vector3(),
-  });
+    const handleResize = () => {
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      renderer.setSize(width, height);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      controlsRef.current?.handleResize();
+    };
 
-  const handleResetControls = () => {
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      container.removeChild(renderer.domElement);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [dataUrl]);
+
+  const resetView = () => {
     if (controlsRef.current) {
-      controlsRef.current.target.copy(initialControls.target);
-      controlsRef.current.object.position.copy(initialControls.cameraPosition);
-      controlsRef.current.object.up.copy(initialControls.cameraUp);
+      controlsRef.current.target.copy(initialViewRef.current.target);
+      controlsRef.current.object.position.copy(
+        initialViewRef.current.cameraPosition
+      );
+      controlsRef.current.object.up.copy(initialViewRef.current.cameraUp);
       controlsRef.current.update();
     }
   };
 
   return (
-    <div id="vis-display">
-      <Canvas>
-        <Model
-          url={dataUrl}
-          meshRef={meshRef}
-          onGeometryLoad={setModelLoaded}
-        />
-        <PerspectiveCamera makeDefault={true} />
-        <TrackballControls ref={controlsRef} />
-        <ControlsSetup
-          meshRef={meshRef}
-          controlsRef={controlsRef}
-          isModelLoaded={isModelLoaded}
-          onControlsSetup={setInitialControls}
-        />
-      </Canvas>
-      <button id="reset-button" onClick={handleResetControls}>
+    <div
+      ref={containerRef}
+      style={{ width: "100%", height: "100%", position: "relative" }}
+    >
+      <button className="reset-button" onClick={resetView}>
         Reset View
       </button>
     </div>
   );
 };
 
-export default StlViewer;
+export default StlCanvas;
