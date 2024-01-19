@@ -28,7 +28,7 @@ const VisCanvas = ({ canvasInfo }) => {
     content = canvasInfo.dataUrl;
   }
 
-  return <div id="vis-panel right-side">{content}</div>;
+  return <div className="vis-panel right-side">{content}</div>;
 };
 
 export default VisCanvas;
