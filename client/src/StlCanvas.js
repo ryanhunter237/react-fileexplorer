@@ -86,7 +86,7 @@ const StlViewer = ({ dataUrl }) => {
 
   return (
     <div id="vis-display">
-      <Canvas>
+      <Canvas style={{ position: "absolute" }}>
         <Model
           url={dataUrl}
           meshRef={meshRef}

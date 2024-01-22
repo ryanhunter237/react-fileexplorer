@@ -49,7 +49,9 @@ const FileExplorerContent = () => {
         currentPath={currentPath}
         setCanvasInfo={setCanvasInfo}
       />
-      {canvasInfo.show && <VisCanvas canvasInfo={canvasInfo} />}
+      {canvasInfo.show && (
+        <VisCanvas key={canvasInfo.dataUrl} canvasInfo={canvasInfo} />
+      )}
     </div>
   );
 };
