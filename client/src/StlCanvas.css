@@ -1,4 +1,4 @@
-#vis-display {
+.stl-canvas {
   position: relative;
   /* min-width: 0; */
   width: 100%;
@@ -6,7 +6,7 @@
   /* background-color: cadetblue; */
 }
 
-#reset-button {
+.reset-button {
   position: absolute;
   z-index: 1;
   top: 10px;
