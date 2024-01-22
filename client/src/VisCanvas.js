@@ -1,4 +1,4 @@
-import StlCanvas from "./StlCanvas";
+import SimpleStlCanvas from "./SimpleStlCanvas";
 import "./VisCanvas.css";
 
 const ImgCanvas = ({ dataUrl }) => {
@@ -23,7 +23,7 @@ const VisCanvas = ({ canvasInfo }) => {
   } else if (canvasInfo.fileType === "pdf") {
     content = <PdfCanvas dataUrl={canvasInfo.dataUrl} />;
   } else if (canvasInfo.fileType === "stl") {
-    content = <StlCanvas dataUrl={canvasInfo.dataUrl} />;
+    content = <SimpleStlCanvas dataUrl={canvasInfo.dataUrl} />;
   } else {
     content = canvasInfo.dataUrl;
   }
